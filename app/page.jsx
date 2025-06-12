@@ -70,7 +70,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className='max-w-2xl mx-auto border-2 rounded-xl m-8 p-8 justify-center'>
+    <div className='max-w-2xl mx-auto border-2 rounded-xl m-8 p-8 justify-center bg-pink-200'>
       <h1 className='text-xl font-semibold py-2'>Localização do Pôr do Sol</h1>
       {loading ? (
         <p>Carregando...</p>
