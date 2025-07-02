@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { formatTimeRemaining } from '../utils/sunsetUtils';
 
 const Countdown = ({ targetTime, onExpired }) => {
-  const [timeRemaining, setTimeRemaining] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState('Loading...');
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -15,7 +15,10 @@ const Countdown = ({ targetTime, onExpired }) => {
       }
     };
 
+    // Atualiza imediatamente
     updateCountdown();
+    
+    // Depois configura o intervalo
     const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);

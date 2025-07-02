@@ -1,6 +1,14 @@
 // components/SunsetCard.js
 import Countdown from './Countdown';
 import { formatSunsetTime } from '../utils/sunsetUtils';
+import dynamic from 'next/dynamic';
+
+
+const CountdownClient = dynamic(() => import('../components/Countdown'), {
+  ssr: false,
+  loading: () => <span className="font-mono text-lg font-bold text-orange-600">--:--:--</span>
+});
+
 
 const SunsetCard = ({ city, onExpired }) => {
   return (
@@ -12,7 +20,7 @@ const SunsetCard = ({ city, onExpired }) => {
         </div>
         <div className="text-right">
           <div className="text-sm text-orange-100">Sunset in:</div>
-          <Countdown 
+          <CountdownClient 
             targetTime={city.sunsetTime} 
             onExpired={() => onExpired && onExpired(city)}
           />
