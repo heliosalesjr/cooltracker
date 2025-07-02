@@ -58,7 +58,7 @@ const SunsetList = () => {
         <div className="space-y-4">
           <div className="text-center mb-6">
             <span className="inline-block bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
-              {upcomingSunsets.length} {upcomingSunsets.length === 1 ? 'lugar encontrado' : 'lugares encontrados'}
+              {upcomingSunsets.length} {upcomingSunsets.length === 1 ? 'city found' : 'cities found'}
             </span>
           </div>
           

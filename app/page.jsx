@@ -1,4 +1,3 @@
-// pages/index.js
 import Head from 'next/head';
 import SunsetList from './components/SunsetList';
 import Navbar from './components/Navbar';
@@ -6,8 +5,7 @@ import Footer from './components/Footer';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-orange-100">
-      <Navbar />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-orange-100 to-blue-100">
       <Head>
         <title>Sunset Locator - Find the next sunsets in real time</title>
         <meta name="description" content="Descubra onde o sol está se pondo agora no mundo" />
@@ -15,10 +13,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <Navbar />
+
+      <main className="flex-grow">
         <SunsetList />
       </main>
+
       <Footer />
     </div>
   );
-  }
+}
