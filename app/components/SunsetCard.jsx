@@ -11,7 +11,7 @@ const SunsetCard = ({ city, onExpired }) => {
           <p className="text-orange-100 text-sm">{city.country}</p>
         </div>
         <div className="text-right">
-          <div className="text-sm text-orange-100">Pôr do sol em:</div>
+          <div className="text-sm text-orange-100">Sunset in:</div>
           <Countdown 
             targetTime={city.sunsetTime} 
             onExpired={() => onExpired && onExpired(city)}
@@ -21,18 +21,24 @@ const SunsetCard = ({ city, onExpired }) => {
       
       <div className="border-t border-orange-300 pt-3 mt-3">
         <div className="flex justify-between text-sm">
-          <span>Horário do pôr do sol:</span>
+          <span>Sunset time:</span>
           <span className="font-mono">{formatSunsetTime(city.sunsetTime)}</span>
         </div>
         <div className="flex justify-between text-sm mt-1">
-          <span>Coordenadas:</span>
+          <span>Coordinates:</span>
           <span className="font-mono">{city.lat.toFixed(2)}°, {city.lng.toFixed(2)}°</span>
         </div>
+        {city.timezone && (
+          <div className="flex justify-between text-sm mt-1">
+            <span>Timezone:</span>
+            <span className="font-mono">{city.timezone}</span>
+          </div>
+        )}
       </div>
       
       <div className="mt-3 flex items-center">
         <div className="w-8 h-8 rounded-full bg-yellow-300 mr-2 animate-pulse"></div>
-        <span className="text-sm">Sol se pondo agora!</span>
+        <span className="text-sm">Sun setting now!</span>
       </div>
     </div>
   );

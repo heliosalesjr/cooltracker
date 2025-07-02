@@ -1,7 +1,7 @@
 // utils/sunsetUtils.js
 import SunCalc from 'suncalc';
 import { formatDistanceToNow, format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 
 export const getSunsetTime = (lat, lng, date = new Date()) => {
   const times = SunCalc.getTimes(date, lat, lng);
@@ -31,7 +31,7 @@ export const formatTimeRemaining = (targetTime) => {
   const now = new Date();
   const diff = targetTime - now;
   
-  if (diff <= 0) return 'Pôr do sol já aconteceu';
+  if (diff <= 0) return 'Sunset already happened';
   
   const minutes = Math.floor(diff / (1000 * 60));
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
@@ -44,9 +44,9 @@ export const formatTimeRemaining = (targetTime) => {
 };
 
 export const formatSunsetTime = (date) => {
-  return format(date, 'HH:mm:ss', { locale: ptBR });
+  return format(date, 'HH:mm:ss', { locale: enUS });
 };
 
 export const getLocalTimeString = (date) => {
-  return format(date, "dd/MM/yyyy 'às' HH:mm:ss", { locale: ptBR });
+  return format(date, "MM/dd/yyyy 'at' HH:mm:ss", { locale: enUS });
 };

@@ -1,10 +1,10 @@
 "use client";
 
-// components/SunsetList.js
 import { useState, useEffect } from 'react';
 import SunsetCard from './SunsetCard';
 import { getSunsetsInNext30Minutes } from '../utils/sunsetUtils';
 import { cities } from '../utils/cities';
+import Link from 'next/link';
 
 const SunsetList = () => {
   const [upcomingSunsets, setUpcomingSunsets] = useState([]);
@@ -37,10 +37,10 @@ const SunsetList = () => {
           🌅 Sunset Locator
         </h1>
         <p className="text-gray-600 mb-4">
-          Lugares onde o sol irá se pôr nos próximos 30 minutos
+        Places where the sun will set in the next 30 minutes
         </p>
         <div className="text-sm text-gray-500">
-          Última atualização: {lastUpdate.toLocaleTimeString('pt-BR')}
+          Last updated: {lastUpdate.toLocaleTimeString('pt-BR')}
         </div>
       </div>
 
@@ -48,10 +48,10 @@ const SunsetList = () => {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🌙</div>
           <h2 className="text-2xl font-semibold text-gray-600 mb-2">
-            Nenhum pôr do sol nos próximos 30 minutos
+            No sunset for the next 30 minutes
           </h2>
           <p className="text-gray-500">
-            Tente novamente em alguns minutos ou aguarde o próximo horário.
+            Try again soon!
           </p>
         </div>
       ) : (
@@ -74,7 +74,7 @@ const SunsetList = () => {
 
       <div className="mt-8 text-center text-sm text-gray-500">
         <p>
-          Cálculos baseados na posição do sol usando a biblioteca SunCalc
+          Powered by the library <em><Link href="/">SunCalc</Link></em>
         </p>
       </div>
     </div>
