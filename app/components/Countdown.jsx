@@ -1,3 +1,5 @@
+"use client"
+
 // components/Countdown.js
 import { useState, useEffect } from 'react';
 import { formatTimeRemaining } from '../utils/sunsetUtils';

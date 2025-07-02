@@ -1,16 +1,25 @@
+"use client" 
 // components/SunsetCard.js
-import Countdown from './Countdown';
 import { formatSunsetTime } from '../utils/sunsetUtils';
 import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
 
-
-const CountdownClient = dynamic(() => import('../components/Countdown'), {
+const CountdownClient = dynamic(() => import('./Countdown'), {
   ssr: false,
-  loading: () => <span className="font-mono text-lg font-bold text-orange-600">--:--:--</span>
+  loading: () => (
+    <span className="font-mono text-lg font-bold text-orange-600">
+      --:--:--
+    </span>
+  )
 });
 
-
 const SunsetCard = ({ city, onExpired }) => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-lg p-6 shadow-lg text-white mb-4 hover:shadow-xl transition-shadow">
       <div className="flex justify-between items-start mb-3">
@@ -20,17 +29,25 @@ const SunsetCard = ({ city, onExpired }) => {
         </div>
         <div className="text-right">
           <div className="text-sm text-orange-100">Sunset in:</div>
-          <CountdownClient 
-            targetTime={city.sunsetTime} 
-            onExpired={() => onExpired && onExpired(city)}
-          />
+          {isClient ? (
+            <CountdownClient 
+              targetTime={city.sunsetTime} 
+              onExpired={() => onExpired && onExpired(city)}
+            />
+          ) : (
+            <span className="font-mono text-lg font-bold text-orange-600">
+              --:--:--
+            </span>
+          )}
         </div>
       </div>
       
       <div className="border-t border-orange-300 pt-3 mt-3">
         <div className="flex justify-between text-sm">
           <span>Sunset time:</span>
-          <span className="font-mono">{formatSunsetTime(city.sunsetTime)}</span>
+          <span className="font-mono">
+            {isClient ? formatSunsetTime(city.sunsetTime) : '--:--:--'}
+          </span>
         </div>
         <div className="flex justify-between text-sm mt-1">
           <span>Coordinates:</span>

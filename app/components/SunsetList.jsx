@@ -8,15 +8,21 @@ import Link from 'next/link';
 
 const SunsetList = () => {
   const [upcomingSunsets, setUpcomingSunsets] = useState([]);
-  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [lastUpdate, setLastUpdate] = useState(null);
+  const [isClient, setIsClient] = useState(false);
 
   const updateSunsets = () => {
+    const now = new Date();
     const sunsets = getSunsetsInNext30Minutes(cities);
     setUpcomingSunsets(sunsets);
-    setLastUpdate(new Date());
+    setLastUpdate(now);
   };
 
   useEffect(() => {
+    // Marca que estamos no cliente
+    setIsClient(true);
+    
+    // Só executa a lógica de tempo no cliente
     updateSunsets();
     const interval = setInterval(updateSunsets, 60000); // Atualiza a cada minuto
 
@@ -30,6 +36,30 @@ const SunsetList = () => {
     );
   };
 
+  // Enquanto não hidratou no cliente, mostra loading
+  if (!isClient) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            🌅 Sunset Locator
+          </h1>
+          <p className="text-gray-600 mb-4">
+            Places where the sun will set in the next 30 minutes
+          </p>
+          <div className="text-sm text-gray-500">
+            Loading...
+          </div>
+        </div>
+        
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading sunset data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="text-center mb-8">
@@ -40,7 +70,7 @@ const SunsetList = () => {
         Places where the sun will set in the next 30 minutes
         </p>
         <div className="text-sm text-gray-500">
-          Last updated: {lastUpdate.toLocaleTimeString('pt-BR')}
+          Last updated: {lastUpdate ? lastUpdate.toLocaleTimeString('pt-BR') : '--:--:--'}
         </div>
       </div>
 
