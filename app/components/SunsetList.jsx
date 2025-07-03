@@ -6,6 +6,60 @@ import { getSunsetsInNext30Minutes } from '../utils/sunsetUtils';
 import { cities } from '../utils/cities';
 import Link from 'next/link';
 
+// Componente para os mini cards
+const MiniSunsetCard = ({ city, onExpired }) => {
+  const [isClient, setIsClient] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState('');
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    const updateTime = () => {
+      const now = new Date();
+      const sunsetTime = city.sunsetTime;
+      const diff = sunsetTime - now;
+      
+      if (diff <= 0) {
+        setTimeRemaining('00:00');
+        onExpired && onExpired(city);
+        return;
+      }
+
+      const minutes = Math.floor(diff / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeRemaining(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval);
+  }, [isClient, city.sunsetTime, onExpired]);
+
+  return (
+    <div className="bg-gradient-to-r from-orange-300 to-red-400 rounded-lg p-3 shadow-md text-white hover:shadow-lg transition-shadow">
+      <div className="text-center">
+        <h4 className="font-bold text-sm mb-1">{city.name}</h4>
+        <p className="text-orange-100 text-xs mb-2">{city.country}</p>
+        
+        {/* Mini countdown */}
+        <div className="inline-flex items-center bg-black/20 backdrop-blur-sm rounded-full px-2 py-1 border border-white/20">
+          <div className="flex items-center space-x-1">
+            <div className="w-1 h-1 bg-yellow-400 rounded-full animate-pulse"></div>
+            <span className="font-mono text-xs font-bold">
+              {isClient ? timeRemaining : '--:--'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const SunsetList = () => {
   const [upcomingSunsets, setUpcomingSunsets] = useState([]);
   const [lastUpdate, setLastUpdate] = useState(null);
@@ -35,6 +89,10 @@ const SunsetList = () => {
       prev.filter(city => city.name !== expiredCity.name)
     );
   };
+
+  // Separa o primeiro (principal) dos demais (mini cards)
+  const mainSunset = upcomingSunsets[0];
+  const additionalSunsets = upcomingSunsets.slice(1);
 
   // Enquanto não hidratou no cliente, mostra loading
   if (!isClient) {
@@ -85,20 +143,45 @@ const SunsetList = () => {
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="text-center mb-6">
             <span className="inline-block bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
               {upcomingSunsets.length} {upcomingSunsets.length === 1 ? 'city found' : 'cities found'}
             </span>
           </div>
           
-          {upcomingSunsets.map((city) => (
-            <SunsetCard 
-              key={city.name} 
-              city={city} 
-              onExpired={handleSunsetExpired}
-            />
-          ))}
+          {/* Card Principal - Sunset mais próximo */}
+          {mainSunset && (
+            <div className="mb-6">
+              <SunsetCard 
+                key={mainSunset.name} 
+                city={mainSunset} 
+                onExpired={handleSunsetExpired}
+              />
+            </div>
+          )}
+          
+          {/* Mini Cards - Demais sunsets */}
+          {additionalSunsets.length > 0 && (
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                  Other upcoming sunsets
+                </h3>
+              </div>
+              
+              {/* Grid responsivo para mini cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                {additionalSunsets.map((city) => (
+                  <MiniSunsetCard 
+                    key={city.name} 
+                    city={city} 
+                    onExpired={handleSunsetExpired}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
