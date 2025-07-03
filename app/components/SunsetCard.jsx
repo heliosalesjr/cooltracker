@@ -124,23 +124,20 @@ const SunsetCard = ({ city, onExpired }) => {
             </div>
           </div>
           
-          {/* Labels nas pontas */}
-          <div className="flex justify-between text-xs mt-2 text-orange-100">
-            <span>30 minutes to Sunset</span>
-            <span>Sunset</span>
-          </div>
-        </div>
-        
-        {/* Countdown centralizado */}
-        <div className="text-center">
-          <div className="inline-flex items-center bg-black/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-              <span className="font-mono text-lg font-bold tracking-wider">
-                {isClient ? timeRemaining : '--:--'}
-              </span>
-              <div className="text-sm text-orange-100">remaining</div>
+          {/* Countdown no canto esquerdo e label no direito */}
+          <div className="flex justify-between items-center mt-2">
+            {/* Countdown no canto esquerdo */}
+            <div className="inline-flex items-center bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 border border-white/20">
+              <div className="flex items-center space-x-2">
+                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse"></div>
+                <span className="font-mono text-sm font-bold tracking-wider">
+                  {isClient ? timeRemaining : '--:--'}
+                </span>
+              </div>
             </div>
+            
+            {/* Label sunset no canto direito */}
+            <span className="text-xs text-orange-100">Sunset</span>
           </div>
         </div>
       </div>
