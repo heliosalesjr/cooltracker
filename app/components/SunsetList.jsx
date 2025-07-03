@@ -100,10 +100,10 @@ const SunsetList = () => {
       <div className="max-w-4xl mx-auto p-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🌅 Sunset Locator
+            🌅 Golden Hour Alert
           </h1>
           <p className="text-gray-600 mb-4">
-            Places where the sun will set in the next 30 minutes
+          Upcoming Sunsets for the next 30 minutes
           </p>
           <div className="text-sm text-gray-500">
             Loading...
@@ -122,10 +122,10 @@ const SunsetList = () => {
     <div className="max-w-4xl mx-auto p-6">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          🌅 Sunset Locator
+          🌅 Golden Hour Alert
         </h1>
         <p className="text-gray-600 mb-4">
-        Places where the sun will set in the next 30 minutes
+        Upcoming Sunsets for the next 30 minutes
         </p>
         <div className="text-sm text-gray-500">
           Last updated: {lastUpdate ? lastUpdate.toLocaleTimeString('pt-BR') : '--:--:--'}
