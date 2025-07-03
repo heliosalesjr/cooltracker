@@ -15,10 +15,46 @@ const CountdownClient = dynamic(() => import('./Countdown'), {
 
 const SunsetCard = ({ city, onExpired }) => {
   const [isClient, setIsClient] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState('');
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    const updateProgress = () => {
+      const now = new Date();
+      const sunsetTime = city.sunsetTime;
+      const thirtyMinutesAgo = new Date(sunsetTime.getTime() - 30 * 60 * 1000);
+      
+      // Calcula o progresso (0 a 100%)
+      const totalDuration = sunsetTime.getTime() - thirtyMinutesAgo.getTime();
+      const elapsed = now.getTime() - thirtyMinutesAgo.getTime();
+      const progressPercent = Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
+      
+      setProgress(progressPercent);
+
+      // Calcula tempo restante
+      const diff = sunsetTime - now;
+      if (diff <= 0) {
+        setTimeRemaining('00:00');
+        onExpired && onExpired(city);
+        return;
+      }
+
+      const minutes = Math.floor(diff / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeRemaining(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+    };
+
+    updateProgress();
+    const interval = setInterval(updateProgress, 1000);
+
+    return () => clearInterval(interval);
+  }, [isClient, city.sunsetTime, onExpired]);
 
   return (
     <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-lg p-6 shadow-lg text-white mb-4 hover:shadow-xl transition-shadow">
@@ -61,9 +97,52 @@ const SunsetCard = ({ city, onExpired }) => {
         )}
       </div>
       
-      <div className="mt-3 flex items-center">
-        <div className="w-8 h-8 rounded-full bg-yellow-300 mr-2 animate-pulse"></div>
-        <span className="text-sm">Sun setting now!</span>
+      {/* Barra de Progresso Elegante */}
+      <div className="mt-4 space-y-3">
+        <div className="relative">
+          {/* Barra de fundo */}
+          <div className="w-full h-3 bg-white/20 rounded-full backdrop-blur-sm border border-white/30">
+            {/* Barra de progresso com gradiente animado */}
+            <div 
+              className="h-full bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
+              style={{ width: `${progress}%` }}
+            >
+              {/* Efeito de brilho animado */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse"></div>
+            </div>
+          </div>
+          
+          {/* Ícone do sol na ponta direita */}
+          <div className="absolute -right-1 -top-2 w-7 h-7 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-full flex items-center justify-center shadow-lg border-2 border-white/50">
+            <div className="text-xs">🌅</div>
+            {/* Raios do sol */}
+            <div className="absolute inset-0">
+              <div className="absolute -top-2 left-1/2 w-0.5 h-1.5 bg-yellow-300 transform -translate-x-1/2 rounded-full"></div>
+              <div className="absolute -bottom-2 left-1/2 w-0.5 h-1.5 bg-yellow-300 transform -translate-x-1/2 rounded-full"></div>
+              <div className="absolute -left-2 top-1/2 w-1.5 h-0.5 bg-yellow-300 transform -translate-y-1/2 rounded-full"></div>
+              <div className="absolute -right-2 top-1/2 w-1.5 h-0.5 bg-yellow-300 transform -translate-y-1/2 rounded-full"></div>
+            </div>
+          </div>
+          
+          {/* Labels nas pontas */}
+          <div className="flex justify-between text-xs mt-2 text-orange-100">
+            <span>30 minutes to Sunset</span>
+            <span>Sunset</span>
+          </div>
+        </div>
+        
+        {/* Countdown centralizado */}
+        <div className="text-center">
+          <div className="inline-flex items-center bg-black/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+              <span className="font-mono text-lg font-bold tracking-wider">
+                {isClient ? timeRemaining : '--:--'}
+              </span>
+              <div className="text-sm text-orange-100">remaining</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
